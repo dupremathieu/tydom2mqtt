@@ -2,6 +2,7 @@
 import asyncio
 import logging.config
 import socket
+import ssl
 import sys
 import signal
 import websockets
@@ -66,6 +67,9 @@ async def listen_tydom():
         except ConnectionRefusedError as e:
             logger.error("Connection refused (%s)", e)
             sys.exit(1)
+        except ssl.SSLError as e:
+            logger.error("SSL error (%s)", e)
+            await tydom_client.disconnect()
 
 
 async def poll_device_tydom():

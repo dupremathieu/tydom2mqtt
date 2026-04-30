@@ -148,27 +148,31 @@ class TydomClient:
         conn = http.client.HTTPSConnection(self.host, 443, context=self.ssl_context)
 
         # Get first handshake
-        conn.request(
-            "GET",
-            "/mediation/client?mac={}&appli=1".format(self.mac),
-            None,
-            http_headers,
-        )
-        logger.debug("GET /mediation/client?mac={}&appli=1".format(self.mac))
-        logger.debug(http_headers)
-        res = conn.getresponse()
-        conn.close()
+        res = None
+        try:
+            conn.request(
+                "GET",
+                "/mediation/client?mac={}&appli=1".format(self.mac),
+                None,
+                http_headers,
+            )
+            logger.debug("GET /mediation/client?mac={}&appli=1".format(self.mac))
+            logger.debug(http_headers)
+            res = conn.getresponse()
+            conn.close()
 
-        logger.debug("Response headers")
-        logger.debug(res.headers)
+            logger.debug("Response headers")
+            logger.debug(res.headers)
 
-        logger.debug("Response code")
-        logger.debug(res.getcode())
+            logger.debug("Response code")
+            logger.debug(res.getcode())
 
-        # Read response
-        logger.debug("response")
-        logger.debug(res.read())
-        res.read()
+            # Read response
+            logger.debug("response")
+            logger.debug(res.read())
+            res.read()
+        except ssl.SSLError as e:
+            logger.warning("SSL error during initial handshake: %s", e)
 
         # Get authentication
         websocket_headers = {}

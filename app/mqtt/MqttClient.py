@@ -56,6 +56,7 @@ class MqttClient:
                 self.ssl,
             )
             address = socket.gethostname() + str(datetime.fromtimestamp(time.time()))
+            logger.debug(type(self.ssl))
             client = MQTTClient(address)
             client.on_connect = self.on_connect
             client.on_message = self.on_message
@@ -67,6 +68,8 @@ class MqttClient:
             return self.mqtt_client
         except Exception as e:
             logger.warning("MQTT connection error : %s", e)
+            logger.exception(e)
+            sys.exit(1)
 
     def on_connect(self, client, flags, rc, properties):
         try:

@@ -154,6 +154,8 @@ class TydomClient:
             None,
             http_headers,
         )
+        logger.debug("GET /mediation/client?mac={}&appli=1".format(self.mac))
+        logger.debug(http_headers)
         res = conn.getresponse()
         conn.close()
 
